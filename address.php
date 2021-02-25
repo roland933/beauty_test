@@ -4,15 +4,13 @@ require "config/Database.php";
 require "model/Address.php";
 require "model/Log.php";
 require "controller/AddressController.php";
+require "auth/Auth.php";
 
 use Webapp\Config\Db\Database as Database;
 
 $db = new Database();
-
 $address = new AddressController($db);
-
-$user_id = $_GET['user_id'];
-
+$user_id = isset($_GET['user_id']);
 $address->deleteAllShipping($user_id);
 $address->deleteAllBillingAddress($user_id);
 $address->deleteAddressById();
@@ -27,6 +25,7 @@ $address->deleteAddressById();
     <div class="container">
         <?php include('inc/navigation.php'); ?>
         <div class="content">
+            <?php if(Auth::isAuth()): ?>
             <div class="col-xl-12">
                 <div class="content-header mb-5 py-3 text-uppercase"><h3>Címek</h3></div>
                 <div class="d-flex bd-highlight mb-3">
@@ -98,6 +97,9 @@ $address->deleteAddressById();
                     <div class="d-flex bd-highlight mb-3">
                         <div class="mr-auto p-2 bd-highlight"><h5>Számlázási címek </h5></div>
                         <div class="p-1 bd-highlight"><a class="btn btn-success btn-sm"
+                                                         data-toggle="tooltip"
+                                                         data-placement="top"
+                                                         title="Új számlázási cím"
                                                          href="form.php?action=add&&type=billing&&user_id=<?php echo $user_id; ?>">
                                 <i class="fas fa-plus"></i></a>
 
@@ -105,7 +107,12 @@ $address->deleteAddressById();
                         <?php if ($address->fetchAllBillingAddress()): ?>
                             <div class="p-1 bd-highlight">
                                 <form method="post" action="">
-                                    <button type="submit" class="btn btn-danger btn-sm" name="delete_all_ba"><i
+                                    <button type="submit"
+                                            data-toggle="tooltip"
+                                            data-placement="top"
+                                            title="Számlázási címek törlése"
+                                            class="btn btn-danger btn-sm"
+                                            name="delete_all_ba"><i
                                                 class="fas fa-trash"></i></button>
                                 </form>
 
@@ -156,8 +163,10 @@ $address->deleteAddressById();
                 </div>
             </div>
         </div>
+    <?php endif;?>
     </div>
+
 </div>
-</div>
+
 </body>
 </html>

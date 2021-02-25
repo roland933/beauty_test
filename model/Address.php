@@ -1,6 +1,11 @@
 <?php
 namespace Webapp\Model;
 
+/***
+ * Class Address
+ * Címeket feldologozó model
+ * @package Webapp\Model
+ */
 class Address {
 
     private $user_id;
@@ -8,10 +13,26 @@ class Address {
     private $city;
     private $region;
     private $zipcode;
-    private $addressType;
     private $street;
     private $name;
     private $default;
+    private $taxNumber;
+
+    /**
+     * @return mixed
+     */
+    public function getTaxNumber()
+    {
+        return $this->taxNumber;
+    }
+
+    /**
+     * @param mixed $taxNumber
+     */
+    public function setTaxNumber($taxNumber): void
+    {
+        $this->taxNumber = $taxNumber;
+    }
   
    
     /**

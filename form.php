@@ -1,9 +1,9 @@
 <?php
 
-require_once "config/Database.php";
+require "config/Database.php";
 require "model/Address.php";
-require_once "helper/Validation.php";
-require_once "model/Log.php";
+require "helper/Validation.php";
+require "model/Log.php";
 require "controller/AddressController.php";
 
 use Webapp\Config\Db\Database as Database;
@@ -11,21 +11,9 @@ use Webapp\Config\Db\Database as Database;
 $db = new Database();
 
 $address = new AddressController($db);
-$user_id = $_GET['user_id'];
+$user_id = isset($_GET['user_id']);
 
-if (isset($_GET['action']) && $_GET['action'] == 'add') {
-
-    $address->store();
-
-} else {
-
-
-    $address->edit($_GET['type']);
-    $address->update($_GET['address_id']);
-
-}
-
-
+$address->addActions();
 ?>
 
 <!doctype html>
@@ -63,12 +51,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                         <div class="form-group">
                             <label for="">Adószám: </label>
                             <input type="text"
-                                   value=""
+                                   value="<?php echo $address->getTaxNumber();?>"
                                    class="form-control"
                                    name="taxnumber"
                                    id=""
-                                   placeholder="xxxx">
-
+                                   placeholder="Ide irja be a 11 számjegyű adószámát">
+                            <?php if (!empty($address->val->taxNumberErr)): ?>
+                                <span class="error"><?php echo $address->val->taxNumberErr; ?></span>
+                            <?php endif; ?>
                         </div>
 
                     <?php endif; ?>
@@ -81,6 +71,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                                    name="regio"
                                    class="form-control"
                                    id=""
+
                                    placeholder="Csongrád">
 
                             <?php if (!empty($address->val->regioErr)): ?>
@@ -96,6 +87,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                                    name="city"
                                    class="form-control"
                                    id=""
+
                                    placeholder="Szeged">
 
                             <?php if (!empty($address->val->cityErr)): ?>
@@ -110,6 +102,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                                    name="zipcode"
                                    class="form-control"
                                    id=""
+
                                    placeholder="6726">
 
                             <?php if (!empty($address->val->zipcodeErr)): ?>
@@ -124,6 +117,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                                    name="street"
                                    class="form-control"
                                    id=""
+
                                    placeholder="Példa utca 11">
 
                             <?php if (!empty($address->val->streetErr)): ?>
@@ -140,6 +134,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
                             <input class="form-check-input"
                                    name="default"
                                    type="checkbox"
+
                                 <?php $address->getDefault() == '1' ? print 'checked' : '' ?>
                                    value="0"
                                    id="flexCheckDefault">
@@ -162,9 +157,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'add') {
     </div>
 
 </div>
-
-</div>
-
 
 </body>
 </html>

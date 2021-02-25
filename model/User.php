@@ -1,5 +1,9 @@
 <?php
 namespace Webapp\Model;
+/***
+ * Class User
+ * @package Webapp\Model
+ */
 class User {
 
 

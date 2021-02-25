@@ -12,16 +12,37 @@ class Validation
     public $cityErr = '';
     public $regioErr = '';
     public $emailErr = '';
-    public $firstMameErr = '';
+    public $firstNameErr = '';
     public $lastNameErr = '';
+    public $passwordErr = "";
+    public $taxNumberErr = '';
 
+
+    public function taxNumber($val)
+    {
+        var_dump($val);
+        if(!empty($val) && strlen($val) !== 11) {
+            $this->taxNumberErr= "Érvénytelen adószám";
+            return $this->errors[] = [$this->taxNumberErr];
+        }
+
+    }
+
+    public function password($val)
+    {
+        if (empty($val)) {
+
+            $this->passwordErr= "A mező kitöltése kötelező";
+            return $this->errors[] = [$this->passwordErr];
+        }
+    }
 
     public function firstName($val)
     {
         if (empty($val)) {
 
-            $this->firstMameErr = "A mező kitöltése kötelező";
-            return $this->errors[] = [$this->firstMameErr];
+            $this->firstNameErr = "A mező kitöltése kötelező";
+            return $this->errors[] = [$this->firstNameErr];
         }
 
     }

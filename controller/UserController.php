@@ -23,7 +23,7 @@ class UserController extends User
     public function show()
     {
 
-        $data = $this->db->select("SELECT * FROM " . $this->table . " Where id = 1");
+        $data = $this->db->select("SELECT * FROM" . " " . $this->table . " Where id = 1");
 
         $this->setId($data->id);
         $this->setFirstname($data->first_name);
@@ -43,17 +43,19 @@ class UserController extends User
             $id = $_POST['user_id'];
             $this->val = new Validation();
 
-            $fname = filter_var($_POST['fname'],FILTER_SANITIZE_STRING);
-            $lname = filter_var($_POST['lname'],FILTER_SANITIZE_STRING);
-            $email = filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);
+            $fname = filter_var($_POST['fname'], FILTER_SANITIZE_STRING);
+            $lname = filter_var($_POST['lname'], FILTER_SANITIZE_STRING);
+            $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
             $psw = $_POST['password'];
+            $hash = password_hash($psw, PASSWORD_BCRYPT);
 
             $this->val->email($email);
             $this->val->firstName($fname);
             $this->val->lastName($lname);
+            $this->val->password($psw);
 
 
-            if(empty($this->val->errors)) {
+            if (empty($this->val->errors)) {
 
                 $this->db->Update("UPDATE " . $this->table . " 
                 set first_name = :first_name, last_name = :last_name, email = :email, password = :password
@@ -62,17 +64,12 @@ class UserController extends User
                         "first_name" => $fname,
                         "last_name" => $lname,
                         "email" => $email,
-                        "password" => $psw,
+                        "password" => $hash,
                     ]
                 );
 
-                $_SESSION['message']= "Sikeres frissítés";
 
-
-
-
-
-                Log::store('Személyes adat frissitése', $id);
+                Log::store('Személyes adat frissítése', $id);
                 header("Location: index.php");
 
             }

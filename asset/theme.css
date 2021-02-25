@@ -76,3 +76,36 @@ table a:focus, table a:active {
 .page {
     margin-top:25px;
 }
+
+/** tooltip **/
+
+
+.tooltip-main {
+    width: 15px;
+
+    border-radius: 50%;
+    font-weight: 700;
+    background: #f3f3f3;
+    border: 1px solid #737373;
+    color: #737373;
+    margin: 4px 121px 0 5px;
+    float: right;
+    text-align: left !important;
+}
+
+.tooltip-qm {
+    float: left;
+    margin: -2px 0px 3px 4px;
+    font-size: 12px;
+}
+
+.tooltip-inner {
+    max-width: 225px !important;
+
+    font-size: 12px;
+    padding: 5px 5px 5px 5px;
+    background: #FFFFFF;
+    color: rgb(0, 0, 0, 0.7);
+    border: 1px solid #737373;
+    text-align: left;
+}

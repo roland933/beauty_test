@@ -17,6 +17,21 @@ class AddressController extends Address
     {
         $this->db = $db;
 
+
+    }
+
+    public function addActions()
+    {
+        if (isset($_GET['action']) && $_GET['action'] == 'add') {
+
+            $this->store();
+
+        } else {
+
+            $this->edit($_GET['type']);
+            $this->update($_GET['address_id']);
+
+        }
     }
 
 
@@ -40,8 +55,7 @@ class AddressController extends Address
         $user_id = $_GET['user_id'];
 
 
-        $data = $this->db->SelectAll(
-            "SELECT sa.id,sa.city,sa.name,sa.street, sa.set_default FROM " . $this->shipping_table . " as sa 
+        $data = $this->db->SelectAll("SELECT sa.id,sa.city,sa.name,sa.street,sa.set_default FROM" . " " . $this->shipping_table . " as sa 
         INNER JOIN users as u ON sa.user_id = u.id WHERE sa.user_id = :user_id", ["user_id" => $user_id]);
 
 
@@ -56,7 +70,7 @@ class AddressController extends Address
         $user_id = $_GET['user_id'];
 
         $data = $this->db->SelectAll("
-        SELECT ba.id, ba.tax_number, ba.name,ba.city,ba.zipcode, ba.region, ba.street FROM " . $this->billing_table . " as ba 
+        SELECT ba.id, ba.tax_number, ba.name,ba.city,ba.zipcode, ba.region, ba.street FROM" . " " . $this->billing_table . " as ba 
         INNER JOIN users as u ON ba.user_id = u.id WHERE ba.user_id = :id", ["id" => $user_id]);
         return $data;
     }
@@ -68,7 +82,7 @@ class AddressController extends Address
 
         if ($type == "shipping") {
 
-            $data = $this->db->Select("SELECT * FROM " . $this->shipping_table . " as sa 
+            $data = $this->db->Select("SELECT * FROM" . " " . $this->shipping_table . " as sa 
         WHERE sa.id = :id", ["id" => $_GET['address_id']]
 
             );
@@ -82,7 +96,7 @@ class AddressController extends Address
 
         } else {
 
-            $data = $this->db->Select("SELECT * FROM " . $this->billing_table . " as ba
+            $data = $this->db->Select("SELECT * FROM" . " " . $this->billing_table . " as ba
             WHERE ba.id = :id", ["id" => $_GET['address_id']]
 
             );
@@ -92,6 +106,7 @@ class AddressController extends Address
             $this->setRegion($data->region);
             $this->setZipcode($data->zipcode);
             $this->setStreet($data->street);
+            $this->setTaxNumber($data->tax_number);
 
         }
 
@@ -105,7 +120,7 @@ class AddressController extends Address
 
             foreach ($this->fetchAllShippingAddress() as $row) {
 
-                $del = $this->db->Remove("Delete from  " . $this->shipping_table . " where id = :id", [
+                $del = $this->db->Remove("Delete from" . " " . $this->shipping_table . " where id = :id", [
                     'id' => $row['id']
 
                 ]);
@@ -128,7 +143,7 @@ class AddressController extends Address
 
             $id = $_GET['delete_id'];
 
-            $this->db->Remove("Delete from  " . $this->shipping_table . " where id = :id", [
+            $this->db->Remove("Delete from" . " " . $this->shipping_table . " where id = :id", [
                 'id' => $id
 
             ]);
@@ -143,7 +158,7 @@ class AddressController extends Address
 
             $id = $_GET['delete_id'];
 
-            $del = $this->db->Remove("Delete from  " . $this->billing_table . " where id = :id", [
+            $this->db->Remove("Delete from" . " " . $this->billing_table . " where id = :id", [
                 'id' => $id
 
             ]);
@@ -163,7 +178,7 @@ class AddressController extends Address
 
             foreach ($this->fetchAllBillingAddress() as $row) {
 
-                $del = $this->db->Remove("Delete from  " . $this->billing_table . " where id = :id", [
+                $this->db->Remove("Delete from" . " " . $this->billing_table . " where id = :id", [
                     'id' => $row['id']
 
                 ]);
@@ -247,7 +262,6 @@ class AddressController extends Address
         if ($_SERVER["REQUEST_METHOD"] == "POST" && $_GET['type'] == 'billing') {
 
             //Számlázis cím frissítése
-
             $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
             $city = filter_var($_POST['city'], FILTER_SANITIZE_STRING);
             $zipcode = filter_var($_POST['zipcode'], FILTER_SANITIZE_NUMBER_INT);
@@ -284,6 +298,10 @@ class AddressController extends Address
                 $this->setZipcode($zipcode);
                 $this->setRegion($region);
                 $this->setStreet($street);
+                $this->setTaxNumber($taxnumber);
+
+                header("Location: address.php?user_id=$_GET[user_id]");
+
             }
 
 
@@ -317,19 +335,20 @@ class AddressController extends Address
                 $this->val->street($street);
                 $this->val->regio($region);
                 $this->val->city($city);
-
+                $this->val->taxNumber($taxnumber);
 
                 $this->setName($name);
                 $this->setCity($city);
                 $this->setZipcode($zipcode);
                 $this->setRegion($region);
                 $this->setStreet($street);
+                $this->setTaxNumber($taxnumber);
 
 
                 if (empty($this->val->errors)) {
 
 
-                    $this->db->Insert("INSERT INTO " . $this->billing_table . "( 
+                    $this->db->Insert("INSERT INTO" . " " . $this->billing_table . "( 
                                      user_id ,
                                      name,
                                      tax_number,
@@ -391,7 +410,7 @@ class AddressController extends Address
 
                 if (empty($this->val->errors)) {
 
-                    $this->db->Insert("INSERT INTO " . $this->shipping_table . "( 
+                    $this->db->Insert("INSERT INTO" . " " . $this->shipping_table . "( 
                     user_id ,
                     name,
                     region,

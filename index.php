@@ -4,7 +4,7 @@ require "model/User.php";
 require "model/Log.php";
 require "helper/Validation.php";
 require "controller/UserController.php";
-session_start();
+
 $user = new UserController();
 $user->show();
 $user_id = $user->getId();
@@ -20,16 +20,10 @@ $user->update();
     <div class="container">
         <?php include('inc/navigation.php'); ?>
         <div class="content">
+
             <div class="col-xl-12">
                 <h3 class="mb-5 py-3 text-uppercase">Üdvözlünk <?php echo $user->fullName(); ?></h3>
                 <h5 class="mb-4 text-uppercase">Személyes adatok </h5>
-                <?php if(isset($_SESSION['message'])): ?>
-                    <div class="alert alert-success">
-                        <?php echo $_SESSION['message']; ?>
-                    </div>
-
-                <?php endif; ?>
-
                 <form method="post" action="">
                     <div class="row">
                         <div class="col-xl-12 form-group">
@@ -37,10 +31,13 @@ $user->update();
                             <input type="text"
                                    value="<?php echo $user->getFirstname(); ?>"
                                    class="form-control"
+                                   required
                                    id=""
                                    name="fname"
                                    placeholder="Vezeték név">
-
+                            <?php if(!empty($user->val->firstNameErr)): ?>
+                                <span class="error"><?php echo $user->val->firstNameErr ?></span>
+                            <?php endif; ?>
                         </div>
 
                         <div class="col-xl-12 form-group">
@@ -48,10 +45,13 @@ $user->update();
                             <input type="text"
                                    value="<?php echo $user->getLastname() ?>"
                                    class="form-control"
+                                   required
                                    id=""
                                    name="lname"
                                    placeholder="Kereszt név">
-
+                            <?php if(!empty($user->val->lastNameErr)): ?>
+                                <span class="error"><?php echo $user->val->lastNameErr ?></span>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -76,7 +76,13 @@ $user->update();
                                value="<?php echo $user->getPassword() ?>"
                                class="form-control"
                                id="exampleInputPassword1"
+                               required
                                placeholder="jelszó">
+
+                        <?php if(!empty($user->val->passwordErr)): ?>
+                            <span class="error"><?php echo $user->val->passwordErr ?></span>
+                        <?php endif; ?>
+
                     </div>
 
                     <input name="user_id" type="hidden" value="<?php echo $user->getId() ?>" />
@@ -87,16 +93,8 @@ $user->update();
 
             </div>
         </div>
+
     </div>
 </div>
-<script>
-
-    setTimeout(function() {
-        let alert = document.querySelector(".alert");
-        alert.remove();
-    }, 3000);
-
-</script>
-
 </body>
 </html>
