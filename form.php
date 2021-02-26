@@ -14,6 +14,7 @@ $db = new Database();
 $address = new AddressController();
 $user_id = isset($_GET['user_id']);
 $address->addActions();
+Auth::redirect();
 ?>
 
 <!doctype html>
