@@ -233,11 +233,11 @@ class AddressController extends Address
 
 
                 if ($default_addr == '1') {
-
+                    // Nem lehet két alapértelemzett cím
                     $this->db->Update(
                         "Update " . $this->shipping_table . " set set_default = :set_default
                          WHERE id != :id", [
-                        "id" => $id,
+                        "id" => $_GET['address_id'],
                         "set_default" => 0
 
                     ]);
