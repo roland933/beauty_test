@@ -1,24 +1,72 @@
 body {
-    background-color:#3498db;
+    background-color: #3498db;
     font-family: 'Open Sans', sans-serif;
 }
 
-.bg-dark {
-    background-color:#2980b9 !important;
+.btn-blue {
+    border: 1px solid #2980b9;
+    width: 200px;
+    border-radius: 50px;
+    color: #2980b9;
+
 }
+.navbar {
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
+.history-table {
+    max-height:400px;
+    overflow:auto;
+}
+
+.btn-blue:active, .btn-blue:focus {
+    box-shadow: none;
+}
+.navbar-dark .navbar-nav .nav-link {
+    color:#fff;
+}
+
+.welcome h4 {
+    color:#2980b9;
+    font-weight:600;
+
+}
+
+.welcome p {
+    color:#696969;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover, .nav-link:focus {
+    color:#123f5b !important;
+
+}
+.nav-link.active {
+    color:#123f5b !important;
+}
+
+.btn-blue:hover {
+    background-color: #2980b9;
+    color: #FFFFFF;
+}
+
+.bg-dark {
+    background-color: #2980b9 !important;
+}
+
 
 h3 {
     font-weight: 700;
-    color:#2980b9;
+    color: #2980b9;
 }
 
 h5 {
-    font-weight:500;
-    color:#2980b9;
+    font-weight: 500;
+    color: #2980b9;
 }
 
 .content {
-    padding:15px;
+    padding: 15px;
 }
 
 .content {
@@ -26,55 +74,61 @@ h5 {
 }
 
 table tr td, th {
-    font-size:13px;
+    font-size: 13px;
 }
 
 table th {
-    color:#2980b9;
+    color: #2980b9;
 }
 
 table td {
-    color:#696969;
+    color: #696969;
 }
 
 
+table .btn {
+    font-size: 13px;
 
-table .btn  {
+}
+
+.col-form-label {
+    color: #2980b9;
+    padding-top:calc(.375rem + 2px) !important;
+
     font-size:13px;
+
 }
-
-
 form label {
-    font-size:12px;
-    color:#696969;
+    font-size: 12px;
+    color: #2980b9;
 }
 
 .form-control:focus {
-    box-shadow:none;
+    box-shadow: none;
 }
 
 .form-control {
 
-    border-bottom:1px solid #ededed;
-    border-top:0;
-    border-left:0;
-    border-right:0;
-    border-radius:0;
-    font-size:13px;
-    color:#696969;
+    border-bottom: 1px solid #696969;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    font-size: 13px;
+    color: #2a2a2a;
 }
 
 table a:focus, table a:active {
-        box-shadow:none !important;
+    box-shadow: none !important;
 }
 
 .error {
-    font-size:12px;
-    color:red;
+    font-size: 12px;
+    color: red;
 }
 
 .page {
-    margin-top:25px;
+    margin-top: 25px;
 }
 
 /** tooltip **/

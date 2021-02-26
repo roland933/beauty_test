@@ -5,14 +5,14 @@ require "model/Address.php";
 require "helper/Validation.php";
 require "model/Log.php";
 require "controller/AddressController.php";
+require "auth/Auth.php";
 
+session_start();
+use Webapp\Auth\Auth as Auth;
 use Webapp\Config\Db\Database as Database;
-
 $db = new Database();
-
-$address = new AddressController($db);
+$address = new AddressController();
 $user_id = isset($_GET['user_id']);
-
 $address->addActions();
 ?>
 
@@ -29,17 +29,16 @@ $address->addActions();
                 <div class="form-header mb-5 mt-3"><?php $address->setTitle($_GET["type"]); ?></div>
 
                 <form method="post" action="">
-                    <!-- <?php if (!empty($address->val->errors)): ?>
-                <div class="alert"><?php echo $address->val->errors; ?> </div>
-                <?php endif; ?> -->
                     <div class="row">
 
                         <div class="col-xl-12 form-group">
                             <label for="">Név: <span class="text-danger">*</span></label>
                             <input type="text"
-                                   value="<?php echo $address->getName(); ?>"
+                                   value="<?php isset($_GET['action']) && $_GET['action'] !='edit' ?
+                                       print Auth::name(): print $address->getName()?>"
                                    name="name"
                                    class="form-control"
+                                   required
                                    id=""
                                    placeholder="Teljes név">
                             <?php if (!empty($address->val->nameErr)): ?>
@@ -51,7 +50,7 @@ $address->addActions();
                         <div class="form-group">
                             <label for="">Adószám: </label>
                             <input type="text"
-                                   value="<?php echo $address->getTaxNumber();?>"
+                                   value="<?php echo $address->getTaxNumber(); ?>"
                                    class="form-control"
                                    name="taxnumber"
                                    id=""
@@ -71,7 +70,7 @@ $address->addActions();
                                    name="regio"
                                    class="form-control"
                                    id=""
-
+                                   required
                                    placeholder="Csongrád">
 
                             <?php if (!empty($address->val->regioErr)): ?>
@@ -87,7 +86,7 @@ $address->addActions();
                                    name="city"
                                    class="form-control"
                                    id=""
-
+                                   required
                                    placeholder="Szeged">
 
                             <?php if (!empty($address->val->cityErr)): ?>
@@ -102,7 +101,7 @@ $address->addActions();
                                    name="zipcode"
                                    class="form-control"
                                    id=""
-
+                                   required
                                    placeholder="6726">
 
                             <?php if (!empty($address->val->zipcodeErr)): ?>
@@ -117,7 +116,7 @@ $address->addActions();
                                    name="street"
                                    class="form-control"
                                    id=""
-
+                                   required
                                    placeholder="Példa utca 11">
 
                             <?php if (!empty($address->val->streetErr)): ?>
@@ -149,7 +148,7 @@ $address->addActions();
                     <?php endif; ?>
 
                     <button type="submit" name="submit" class="btn btn-success btn-sm">Mentés</button>
-                    <a href="address.php?user_id=<?php echo $user_id; ?>" class="btn btn-primary btn-sm">Vissza</a>
+                    <a href="address.php" class="btn btn-primary btn-sm">Vissza</a>
 
                 </form>
             </div>

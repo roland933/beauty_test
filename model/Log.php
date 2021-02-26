@@ -6,7 +6,7 @@ namespace Webapp\Model;
  */
 
 use Webapp\Config\Db\Database as Database;
-
+use Webapp\Auth\Auth as Auth;
 
 class Log
 {
@@ -25,7 +25,7 @@ class Log
     public static function getLog()
     {
 
-        $data = self::getDb()->SelectAll("SELECT * FROM" ." ".self::$table. " Order By date DESC");
+        $data = self::getDb()->SelectAll("SELECT * FROM" ." ".self::$table. " WHERE user_id = ".Auth::user_id()." Order By date DESC");
         return $data;
 
     }

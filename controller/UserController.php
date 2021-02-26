@@ -20,10 +20,10 @@ class UserController extends User
     }
 
 
-    public function show()
+    public function show($id)
     {
 
-        $data = $this->db->select("SELECT * FROM" . " " . $this->table . " Where id = 1");
+        $data = $this->db->select("SELECT * FROM" . " " . $this->table . " Where id = $id");
 
         $this->setId($data->id);
         $this->setFirstname($data->first_name);
@@ -34,13 +34,31 @@ class UserController extends User
     }
 
 
-    public function update()
+    public function showMessage() {
+
+        if(isset($_SESSION['password_err'])) {
+           return '<div class="alert alert-danger">'.$_SESSION['password_err'].'</div>';
+
+        } else if(isset($_SESSION['warrning'])) {
+
+            return '<div class="alert alert-warning">'.$_SESSION['warrning'].'</div>';
+
+        } else if(isset($_GET['update'])) {
+            return '<div class="alert alert-success">Sikeres módosítás!</div>';
+        }
+
+
+
+
+
+    }
+
+
+    public function update($id)
     {
 
         if (isset($_POST['update_user'])) {
 
-            var_dump($_POST['user_id']);
-            $id = $_POST['user_id'];
             $this->val = new Validation();
 
             $fname = filter_var($_POST['fname'], FILTER_SANITIZE_STRING);
@@ -54,28 +72,38 @@ class UserController extends User
             $this->val->lastName($lname);
             $this->val->password($psw);
 
+            if (!password_verify($psw, $this->getPassword())) {
+                $_SESSION['password_err']='Hibás jelszót adtál meg!';
+                return false;
+            }
 
-            if (empty($this->val->errors)) {
+            if ($fname != $this->getFirstname() || $lname != $this->getLastname() || $email != $this->getEmail()) {
 
-                $this->db->Update("UPDATE " . $this->table . " 
+                if (empty($this->val->errors)) {
+
+                    $this->db->Update("UPDATE " . $this->table . " 
                 set first_name = :first_name, last_name = :last_name, email = :email, password = :password
                 WHERE id = :id", [
-                        "id" => $id,
-                        "first_name" => $fname,
-                        "last_name" => $lname,
-                        "email" => $email,
-                        "password" => $hash,
-                    ]
-                );
+                            "id" => $id,
+                            "first_name" => $fname,
+                            "last_name" => $lname,
+                            "email" => $email,
+                            "password" => $hash,
+                        ]
+                    );
 
 
-                Log::store('Személyes adat frissítése', $id);
-                header("Location: index.php");
+                    Log::store('Személyes adatok frissítésre kerültek', $id);
+                    header("Location: index.php?update=true");
 
+                }
+
+            } else {
+                $_SESSION['warrning'] = 'Nem történt változtatás';
+                return false;
             }
 
         }
-
 
     }
 

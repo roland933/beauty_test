@@ -5,16 +5,14 @@ require "model/Address.php";
 require "model/Log.php";
 require "controller/AddressController.php";
 require "auth/Auth.php";
-
-use Webapp\Config\Db\Database as Database;
-
-$db = new Database();
-$address = new AddressController($db);
-$user_id = isset($_GET['user_id']);
+session_start();
+use Webapp\Auth\Auth as Auth;
+$user_id = Auth::user_id();
+$address = new AddressController();
 $address->deleteAllShipping($user_id);
 $address->deleteAllBillingAddress($user_id);
 $address->deleteAddressById();
-
+Auth::redirect();
 ?>
 
 <!doctype html>
@@ -60,6 +58,7 @@ $address->deleteAddressById();
                         <th>#</th>
                         <th>Név</th>
                         <th>Város</th>
+                        <th>Irányítószám</th>
                         <th>Utca</th>
                         <th>Alapértelmezett</th>
                         <th></th>
@@ -70,6 +69,7 @@ $address->deleteAddressById();
                                 <td><?php echo $row['id']; ?></td>
                                 <td><?php echo $row['name']; ?></td>
                                 <td><?php echo $row['city']; ?></td>
+                                <td><?php echo $row['zipcode']; ?></td>
                                 <td><?php echo $row['street']; ?></td>
 
                                 <td><?php $row['set_default'] == '1' ? print 'igen' : print 'nem'; ?></td>

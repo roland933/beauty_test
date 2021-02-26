@@ -1,8 +1,11 @@
 <?php
 
+use Webapp\Config\Db\Database as Database;
 use Webapp\Model\Address as Address;
 use Webapp\helper\Validation as Validation;
 use Webapp\Model\Log as Log;
+use Webapp\Auth\Auth as Auth;
+
 
 class AddressController extends Address
 {
@@ -13,9 +16,9 @@ class AddressController extends Address
     public $val;
 
 
-    public function __construct($db)
+    public function __construct()
     {
-        $this->db = $db;
+        $this->db = new Database();
 
 
     }
@@ -52,11 +55,10 @@ class AddressController extends Address
 
     public function fetchAllShippingAddress()
     {
-        $user_id = $_GET['user_id'];
 
 
-        $data = $this->db->SelectAll("SELECT sa.id,sa.city,sa.name,sa.street,sa.set_default FROM" . " " . $this->shipping_table . " as sa 
-        INNER JOIN users as u ON sa.user_id = u.id WHERE sa.user_id = :user_id", ["user_id" => $user_id]);
+        $data = $this->db->SelectAll("SELECT sa.id,sa.city,sa.name,sa.zipcode,sa.street,sa.set_default FROM" . " " . $this->shipping_table . " as sa 
+        INNER JOIN users as u ON sa.user_id = u.id WHERE sa.user_id = :user_id", ["user_id" => Auth::user_id()]);
 
 
         return $data;
@@ -67,11 +69,9 @@ class AddressController extends Address
     public function fetchAllBillingAddress()
     {
 
-        $user_id = $_GET['user_id'];
-
         $data = $this->db->SelectAll("
         SELECT ba.id, ba.tax_number, ba.name,ba.city,ba.zipcode, ba.region, ba.street FROM" . " " . $this->billing_table . " as ba 
-        INNER JOIN users as u ON ba.user_id = u.id WHERE ba.user_id = :id", ["id" => $user_id]);
+        INNER JOIN users as u ON ba.user_id = u.id WHERE ba.user_id = :id", ["id" => Auth::user_id()]);
         return $data;
     }
 
@@ -127,8 +127,8 @@ class AddressController extends Address
 
             }
 
-            Log::store('Összes szállítási cím törlése', $user_id);
-            header("Location: address.php?user_id=$user_id");
+            Log::store('Összes szállítási cím törlésre került', $user_id);
+            header("Location: address.php");
 
         }
 
@@ -148,8 +148,8 @@ class AddressController extends Address
 
             ]);
 
-            Log::store('Szállítási cím törlés', $_GET['user_id']);
-            header("Location: address.php?user_id=$_GET[user_id]");
+            Log::store('' . $id . ' Sorszámú szállítási cím törölve lett', Auth::user_id());
+            header("Location: address.php");
 
         }
 
@@ -163,8 +163,8 @@ class AddressController extends Address
 
             ]);
 
-            Log::store('Számlázási cím törlése', $_GET['user_id']);
-            header("Location: address.php?user_id=$_GET[user_id]");
+            Log::store('' . $id . ' Sorszámú számlázási cím törölésre került', Auth::user_id());
+            header("Location: address.php");
 
         }
 
@@ -186,7 +186,7 @@ class AddressController extends Address
 
             }
 
-            Log::store('Összes számlázási cím törlése', $user_id);
+            Log::store('Összes számlázási cím törlésre került', $user_id);
             header("Location: address.php?user_id=$user_id");
 
         }
@@ -252,8 +252,8 @@ class AddressController extends Address
                 $this->setRegion($region);
                 $this->setStreet($street);
 
-                Log::store('Szállítási cím frissítése', $_GET['user_id']);
-                header("Location: address.php?user_id=$_GET[user_id]");
+                Log::store('' . $id . ' Sorszámú szállítási cím frissítésre került', Auth::user_id());
+                header("Location: address.php");
 
             }
 
@@ -300,7 +300,8 @@ class AddressController extends Address
                 $this->setStreet($street);
                 $this->setTaxNumber($taxnumber);
 
-                header("Location: address.php?user_id=$_GET[user_id]");
+                Log::store('' . $id . ' Sorszámú számlázási cím frissítésre került', Auth::user_id());
+                header("Location: address.php");
 
             }
 
@@ -328,7 +329,7 @@ class AddressController extends Address
                 $zipcode = filter_var($_POST['zipcode'], FILTER_SANITIZE_NUMBER_INT);
                 $region = filter_var($_POST['regio'], FILTER_SANITIZE_STRING);
                 $street = filter_var($_POST['street'], FILTER_SANITIZE_STRING);
-                $user_id = $_GET['user_id'];
+                $user_id = Auth::user_id();
 
                 $this->val->name($name);
                 $this->val->zipcode($zipcode);
@@ -377,9 +378,9 @@ class AddressController extends Address
                         ]
                     );
 
-                    Log::store("Új számlázási cím felvétele", $user_id);
+                    Log::store("Új számlázási cím felvételre került", $user_id);
 
-                    header("Location: address.php?user_id=$user_id");
+                    header("Location: address.php");
                 }
 
 
@@ -393,7 +394,7 @@ class AddressController extends Address
                 $street = filter_var($_POST['street'], FILTER_SANITIZE_STRING);
 
                 isset($_POST['default']) ? $default_addr = '1' : $default_addr = '0';
-                $user_id = $_GET['user_id'];
+                $user_id = Auth::user_id();
 
                 $this->val->name($name);
                 $this->val->zipcode($zipcode);
@@ -442,9 +443,9 @@ class AddressController extends Address
                     );
 
 
-                    Log::store("Új szállítási  cím felvétele", $user_id);
+                    Log::store("Új szállítási  cím felvételre került", $user_id);
 
-                    header("Location: address.php?user_id=$user_id");
+                    header("Location: address.php");
 
 
                 }
