@@ -25,7 +25,7 @@ $login->action();
                             <p class="text-danger text-center"><?php echo $_SESSION['error'];?></p>
                     <?php endif; ?>
                     <?php  unset($_SESSION['error']) ?>
-                    <form method="post" action="" class="mb-3" autocomplete="off">
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="mb-3" autocomplete="off">
                         <div class="row form-group">
                             <label class="col-sm-2 col-form-label">Email cím:</label>
                             <div class="col-sm-10">

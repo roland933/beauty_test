@@ -22,7 +22,7 @@ $reg->action();
                 <div class="col-xl-8 col-lg-10 col-md-11">
                     <div class="page-header mb-5 text-center text-uppercase mt-3"><h3>Regisztráció</h3></div>
 
-                    <form method="post" action="" class="mb-3" autocomplete="off">
+                    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" class="mb-3" autocomplete="off">
 
                         <div class="row form-group">
                             <label class="col-sm-2 col-form-label">Vezeték név:</label>
